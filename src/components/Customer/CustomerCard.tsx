@@ -1,18 +1,11 @@
 import React from 'react'
 import InteractiveElement from '../InteractiveComponent'
-import { Customer } from './types'
+import { CustomerCardProps } from './types'
 
-interface CustomerCardProps {
-  customer: Customer
-  isSelected: boolean
-  onClick: (id: Customer) => void
-}
-
-const CustomerCard: React.FC<CustomerCardProps> = ({
-  customer,
-  isSelected,
-  onClick,
-}) => {
+const CustomerCard: React.ForwardRefRenderFunction<
+  HTMLDivElement,
+  CustomerCardProps
+> = ({ customer, isSelected, onClick }, ref) => {
   const handleClick = () => {
     onClick(customer)
   }
@@ -21,6 +14,7 @@ const CustomerCard: React.FC<CustomerCardProps> = ({
     <InteractiveElement
       className={`customer-card ${isSelected ? 'selected-customer-card' : ''}`}
       onClick={handleClick}
+      ref={ref}
     >
       <h3>{customer.name}</h3>
       <p>{customer.title}</p>
@@ -28,4 +22,4 @@ const CustomerCard: React.FC<CustomerCardProps> = ({
   )
 }
 
-export default React.memo(CustomerCard)
+export default React.memo(React.forwardRef(CustomerCard))

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useCallback, Fragment, useRef } from 'react'
 import './css/style.css'
-import axios from 'axios'
+
 import CustomerDetails from './components/Customer/CustomerDetails'
 import { Customer } from './components/Customer/types'
 import Scrollable from './components/ScrollableContainer/Scrollable'
@@ -13,8 +13,21 @@ const App: React.FC = () => {
     null
   )
   const [pageNumber, setPageNumber] = useState(0)
-  const { customers, hasMore, loading, error } = useCustomers(pageNumber)
+  const { customers, hasMore, loading } = useCustomers(pageNumber)
+  const observer = useRef<IntersectionObserver | null>(null)
 
+  const observeNode = useCallback(
+    (node: HTMLElement | null) => {
+      if (loading) return
+      if (observer.current) observer.current.disconnect()
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting)
+          if (hasMore) setPageNumber((page) => page + 1)
+      })
+      if (node) observer.current.observe(node)
+    },
+    [loading, hasMore]
+  )
   const handleCardClick = useCallback((customer: Customer) => {
     setSelectedCustomer(customer)
   }, [])
@@ -27,22 +40,26 @@ const App: React.FC = () => {
       <div className="flex-row">
         <div className="left-container">
           <Scrollable>
-            <div>
+            <Fragment>
+              {/* <div> */}
               <CustomerList
                 customersList={customers}
                 selectedCustomerId={selectedCustomer?.id ?? '-1'}
                 onClick={handleCardClick}
+                observeNode={observeNode}
               />
-            </div>
+              {/* </div> */}
+              {loading && <p>Loading...</p>}
+            </Fragment>
           </Scrollable>
         </div>
         <div className="right-container">
           <Scrollable>
-            <div>
+            <Fragment>
               {selectedCustomer ? (
                 <CustomerDetails customer={selectedCustomer} />
               ) : null}
-            </div>
+            </Fragment>
           </Scrollable>
         </div>
       </div>

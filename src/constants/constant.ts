@@ -1,1 +1,1 @@
-export const APP_TITLE = "Customer's Detail Applicaiton"
+export const APP_TITLE = "Customer's Detail Application"

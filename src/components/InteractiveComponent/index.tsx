@@ -1,3 +1,4 @@
+import React from 'react'
 import './style.css'
 import {
   DivKeyboardEvent,
@@ -5,12 +6,10 @@ import {
   InteractiveComponentProps,
 } from './types'
 
-const InteractiveElement: React.FC<InteractiveComponentProps> = ({
-  onClick,
-  children,
-  className,
-  ...rest
-}) => {
+const InteractiveElement: React.ForwardRefRenderFunction<
+  HTMLDivElement,
+  InteractiveComponentProps
+> = ({ onClick, children, className, ...rest }, ref) => {
   const handleClick = (event: DivMouseEvent) => {
     onClick && onClick(event)
   }
@@ -28,6 +27,7 @@ const InteractiveElement: React.FC<InteractiveComponentProps> = ({
       tabIndex={0}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
+      ref={ref}
       {...rest}
     >
       {children}
@@ -35,4 +35,4 @@ const InteractiveElement: React.FC<InteractiveComponentProps> = ({
   )
 }
 
-export default InteractiveElement
+export default React.forwardRef(InteractiveElement)

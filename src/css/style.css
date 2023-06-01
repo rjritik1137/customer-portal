@@ -3,6 +3,7 @@ body {
   margin: 0;
   height: 100%;
   background-color: #ffffff;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .app {
@@ -29,6 +30,4 @@ body {
 
 .right-container {
   flex: 2;
-  margin-left: 20px;
-  padding: 10px;
 }
