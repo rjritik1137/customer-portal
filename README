@@ -1,0 +1,5 @@
+1. Clone the repo
+2. Do yarn, use `node version >=16`
+3. run `yarn start` to run the server in dev environment, your project will automaticall start at port number `8080`
+4. run `yarn build` to build the project.
+5. Clone the `customer-server` repo as well and run it.
