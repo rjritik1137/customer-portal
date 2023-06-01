@@ -5,29 +5,15 @@ import CustomerDetails from './components/Customer/CustomerDetails'
 import { Customer } from './components/Customer/types'
 import Scrollable from './components/ScrollableContainer/Scrollable'
 import CustomerList from './components/Customer/CustomerList'
+import { APP_TITLE } from './constants/constant'
+import { useCustomers } from './hooks/useCustomers'
 
 const App: React.FC = () => {
-  const [customers, setCustomers] = useState<Customer[]>([])
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   )
-
-  useEffect(() => {
-    let cleanup = false
-    axios
-      .get('http://localhost:3000/user')
-      .then((response) => {
-        if (cleanup) return
-        setCustomers(response.data)
-      })
-      .catch((e) => {
-        if (cleanup) return
-        console.log(e)
-      })
-    return () => {
-      cleanup = true
-    }
-  }, [])
+  const [pageNumber, setPageNumber] = useState(0)
+  const { customers, hasMore, loading, error } = useCustomers(pageNumber)
 
   const handleCardClick = useCallback((customer: Customer) => {
     setSelectedCustomer(customer)
@@ -35,22 +21,31 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
-      <Scrollable className="left-container">
-        <div>
-          <CustomerList
-            customersList={customers}
-            selectedCustomerId={selectedCustomer?.id ?? '-1'}
-            onClick={handleCardClick}
-          />
+      <div className="title">
+        <h1>{APP_TITLE}</h1>
+      </div>
+      <div className="flex-row">
+        <div className="left-container">
+          <Scrollable>
+            <div>
+              <CustomerList
+                customersList={customers}
+                selectedCustomerId={selectedCustomer?.id ?? '-1'}
+                onClick={handleCardClick}
+              />
+            </div>
+          </Scrollable>
         </div>
-      </Scrollable>
-      <Scrollable className="right-container">
-        <div>
-          {selectedCustomer ? (
-            <CustomerDetails customer={selectedCustomer} />
-          ) : null}
+        <div className="right-container">
+          <Scrollable>
+            <div>
+              {selectedCustomer ? (
+                <CustomerDetails customer={selectedCustomer} />
+              ) : null}
+            </div>
+          </Scrollable>
         </div>
-      </Scrollable>
+      </div>
     </div>
   )
 }

@@ -3,4 +3,6 @@
   scrollbar-color: black;
   -ms-overflow-style: none;
   padding-bottom: 10px;
+  height: 100%;
+  flex: 1;
 }

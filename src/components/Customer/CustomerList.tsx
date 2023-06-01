@@ -1,6 +1,7 @@
 import React from 'react'
 import { Customer } from './types'
 import CustomerCard from './CustomerCard'
+import './styles.css'
 
 const CustomerList = (props: {
   customersList: Array<Customer>
