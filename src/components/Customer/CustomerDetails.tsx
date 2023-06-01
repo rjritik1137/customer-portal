@@ -1,18 +1,33 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { CustomerDetailsProps } from './types'
-
+import axios from 'axios'
+import CustomerImage from './CustomerImage'
+type Pictures = Array<string>
 const CustomerDetails: React.FC<CustomerDetailsProps> = ({ customer }) => {
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0)
+  const [pictures, setPictures] = useState<Pictures>([])
+  const fetchImages = useCallback(() => {
+    axios
+      .get(`http://localhost:3000/images/${customer.id}`)
+      .then((response) => {
+        const images: Array<{ url: string }> = response.data
+        setPictures(() => {
+          return images.map((item) => item.url)
+        })
+      })
+  }, [customer.id])
 
   useEffect(() => {
+    setPictures([])
+  }, [customer.id])
+
+  useEffect(() => {
+    fetchImages()
     const interval = setInterval(() => {
-      setCurrentPhotoIndex((prevIndex) =>
-        prevIndex === customer.pictures.length - 1 ? 0 : prevIndex + 1
-      )
+      fetchImages()
     }, 10000)
 
     return () => clearInterval(interval)
-  }, [customer.pictures.length])
+  }, [fetchImages])
 
   return (
     <div className="customer-details-container">
@@ -20,13 +35,8 @@ const CustomerDetails: React.FC<CustomerDetailsProps> = ({ customer }) => {
       <p>{customer.title}</p>
       <p>{customer.address}</p>
       <div className="photo-grid">
-        {customer.pictures.map((photo, index) => (
-          <img
-            key={index}
-            src={photo}
-            alt={`Pic ${index + 1}`}
-            className={index === currentPhotoIndex ? 'current' : ''}
-          />
+        {pictures.map((photo, index) => (
+          <CustomerImage key={index} alt={index.toString()} url={photo} />
         ))}
       </div>
     </div>

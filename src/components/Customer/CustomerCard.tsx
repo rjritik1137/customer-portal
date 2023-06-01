@@ -1,15 +1,16 @@
+import React from 'react'
 import InteractiveElement from '../InteractiveComponent'
 import { Customer } from './types'
 
 interface CustomerCardProps {
   customer: Customer
-  selectedCustomerId: number
+  isSelected: boolean
   onClick: (id: Customer) => void
 }
 
 const CustomerCard: React.FC<CustomerCardProps> = ({
   customer,
-  selectedCustomerId,
+  isSelected,
   onClick,
 }) => {
   const handleClick = () => {
@@ -18,9 +19,7 @@ const CustomerCard: React.FC<CustomerCardProps> = ({
 
   return (
     <InteractiveElement
-      className={`customer-card ${
-        selectedCustomerId ? 'selected-customer-card' : ''
-      }`}
+      className={`customer-card ${isSelected ? 'selected-customer-card' : ''}`}
       onClick={handleClick}
     >
       <h3>{customer.name}</h3>
@@ -29,4 +28,4 @@ const CustomerCard: React.FC<CustomerCardProps> = ({
   )
 }
 
-export default CustomerCard
+export default React.memo(CustomerCard)

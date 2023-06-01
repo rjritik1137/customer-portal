@@ -1,0 +1,6 @@
+.scrollable-container {
+  overflow-y: scroll;
+  scrollbar-color: black;
+  -ms-overflow-style: none;
+  padding-bottom: 10px;
+}

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import './css/style.css'
 import axios from 'axios'
-import CustomerCard from './components/Customer/CustomerCard'
 import CustomerDetails from './components/Customer/CustomerDetails'
 import { Customer } from './components/Customer/types'
+import Scrollable from './components/ScrollableContainer/Scrollable'
+import CustomerList from './components/Customer/CustomerList'
 
 const App: React.FC = () => {
   const [customers, setCustomers] = useState<Customer[]>([])
@@ -28,27 +29,28 @@ const App: React.FC = () => {
     }
   }, [])
 
-  const handleCardClick = (customer: Customer) => {
+  const handleCardClick = useCallback((customer: Customer) => {
     setSelectedCustomer(customer)
-  }
+  }, [])
 
   return (
     <div className="app">
-      <div className="customer-list scrollable-container">
-        {customers.map((customer) => (
-          <CustomerCard
-            key={customer.id}
-            customer={customer}
-            selectedCustomerId={selectedCustomer?.id || -1}
+      <Scrollable className="left-container">
+        <div>
+          <CustomerList
+            customersList={customers}
+            selectedCustomerId={selectedCustomer?.id ?? '-1'}
             onClick={handleCardClick}
           />
-        ))}
-      </div>
-      <div className="customer-details-container scrollable-container">
-        {selectedCustomer ? (
-          <CustomerDetails customer={selectedCustomer} />
-        ) : null}
-      </div>
+        </div>
+      </Scrollable>
+      <Scrollable className="right-container">
+        <div>
+          {selectedCustomer ? (
+            <CustomerDetails customer={selectedCustomer} />
+          ) : null}
+        </div>
+      </Scrollable>
     </div>
   )
 }

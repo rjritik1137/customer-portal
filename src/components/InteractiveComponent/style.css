@@ -1,12 +1,12 @@
 .interactive-element {
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #37383a;
   color: #fff;
   cursor: pointer;
 }
 
 .interactive-element:hover {
-  background-color: #0056b3;
+  background-color: #969696;
 }
 
 .interactive-element:focus {
@@ -14,5 +14,5 @@
 }
 
 .interactive-element:active {
-  background-color: #003d80;
+  background-color: #2d2d2d;
 }
