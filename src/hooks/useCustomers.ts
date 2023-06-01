@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Customer } from '../components/Customer/types'
 
 function useCustomers(pageNumber: number) {
@@ -11,8 +11,8 @@ function useCustomers(pageNumber: number) {
   useEffect(() => {
     let cleanup = false
     const controller = new AbortController()
-    setLoading(false)
-    setError(true)
+    setLoading(true)
+    setError(false)
     axios({
       method: 'GET',
       url: `http://localhost:3000/user`,
@@ -20,18 +20,23 @@ function useCustomers(pageNumber: number) {
       signal: controller.signal,
     })
       .then((response) => {
-        if (cleanup) return
-        if (response.data) {
-          setCustomers((prev) => [...prev, ...response.data])
-          setHasMore(true)
-        } else {
-          setHasMore(false)
+        const p = () => {
+          if (cleanup) return
+          if (response.data) {
+            setCustomers((prev) => [...prev, ...response.data])
+            setHasMore(true)
+          } else {
+            setHasMore(false)
+          }
+          setLoading(false)
         }
-        setLoading(false)
+        // setTimeout(p, 1000) if you want to see the loading view then comment below line and uncomment this one.
+        p()
       })
       .catch(() => {
         if (cleanup) return
         setError(true)
+        setLoading(false)
       })
     return () => {
       cleanup = true
