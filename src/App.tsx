@@ -41,14 +41,12 @@ const App: React.FC = () => {
         <div className="left-container">
           <Scrollable>
             <Fragment>
-              {/* <div> */}
               <CustomerList
                 customersList={customers}
                 selectedCustomerId={selectedCustomer?.id ?? '-1'}
                 onClick={handleCardClick}
                 observeNode={observeNode}
               />
-              {/* </div> */}
               {loading && <p>Loading...</p>}
             </Fragment>
           </Scrollable>
