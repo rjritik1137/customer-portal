@@ -22,7 +22,7 @@ function useCustomers(pageNumber: number) {
       .then((response) => {
         const p = () => {
           if (cleanup) return
-          if (response.data) {
+          if (response.data && response.data.length > 0) {
             setCustomers((prev) => [...prev, ...response.data])
             setHasMore(true)
           } else {
